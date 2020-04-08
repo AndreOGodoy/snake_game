@@ -6,9 +6,12 @@ extern crate sprite;
 
 use glutin_window::GlutinWindow;
 use opengl_graphics::{GlGraphics, OpenGL};
-use piston::event_loop::{EventSettings, Events, EventLoop};
-use piston::input::{RenderArgs, RenderEvent, UpdateArgs, UpdateEvent, ButtonArgs, ButtonEvent};
+use piston::event_loop::{EventSettings, Events};
+use piston::input::{ButtonEvent, RenderEvent, UpdateEvent};
 use piston::window::WindowSettings;
+
+mod game;
+use game::Game;
 
 fn main() {
     let opengl = OpenGL::V4_5;
@@ -18,11 +21,14 @@ fn main() {
         .build()
         .expect("Coudn't open window");
 
-    let mut event = Events::new(EventSettings::new());
+    let mut game = Game {
+        gl: GlGraphics::new(opengl),
+    };
 
+    let mut event = Events::new(EventSettings::new());
     while let Some(e) = event.next(&mut window) {
         if let Some(arg) = e.render_args() {
-            //Do something here
+            game.render(&arg)
         }
 
         if let Some(arg) = e.update_args() {
@@ -33,5 +39,4 @@ fn main() {
             //Do something here
         }
     }
-
 }

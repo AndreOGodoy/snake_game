@@ -21,9 +21,7 @@ fn main() {
         .build()
         .expect("Coudn't open window");
 
-    let mut game = Game {
-        gl: GlGraphics::new(opengl),
-    };
+    let mut game = Game::new(20, GlGraphics::new(opengl));
 
     let mut event = Events::new(EventSettings::new());
     while let Some(e) = event.next(&mut window) {

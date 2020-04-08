@@ -1,5 +1,6 @@
 use opengl_graphics::GlGraphics;
 use piston::input::RenderArgs;
+use piston::Button;
 
 mod snake;
 use snake::Snake;
@@ -25,5 +26,13 @@ impl Game {
         });
 
         self.snake.render(&args, &mut self.gl);
+    }
+
+    pub fn update(&mut self) {
+        self.snake.update();
+    }
+
+    pub fn register(&mut self, button: &Button) {
+        self.snake.register(&button);
     }
 }

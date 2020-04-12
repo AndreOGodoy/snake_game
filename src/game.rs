@@ -60,6 +60,9 @@ impl Game {
         if self.head_in_food() {
             self.snake.eat();
             self.food.update();
+            if self.snake.is_in_body(self.food.coord) {
+                self.food.update();
+            }
         }
         self.snake.update();
     }

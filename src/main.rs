@@ -25,7 +25,7 @@ fn main() {
         .build()
         .expect("Coudn't open window");
 
-    let mut game = Game::new(40, GlGraphics::new(opengl));
+    let mut game = Game::new(GlGraphics::new(opengl), 40.0);
 
     let mut event = Events::new(EventSettings::new()).ups(10);
 

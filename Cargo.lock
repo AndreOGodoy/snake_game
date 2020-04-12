@@ -240,6 +240,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "derive_more"
+version = "0.99.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e2323f3f47db9a0e77ce7a300605d8d2098597fc451ed1a97bb1f6411bb550a7"
+dependencies = [
+ "proc-macro2 1.0.10",
+ "quote 1.0.3",
+ "syn",
+]
+
+[[package]]
 name = "dlib"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1112,6 +1123,7 @@ dependencies = [
 name = "snake_game"
 version = "0.1.0"
 dependencies = [
+ "derive_more",
  "piston",
  "piston2d-graphics",
  "piston2d-opengl_graphics",

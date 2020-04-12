@@ -6,7 +6,7 @@ extern crate sprite;
 
 use glutin_window::GlutinWindow;
 use opengl_graphics::{GlGraphics, OpenGL};
-use piston::event_loop::{EventSettings, Events, EventLoop};
+use piston::event_loop::{EventLoop, EventSettings, Events};
 use piston::input::{ButtonEvent, RenderEvent, UpdateEvent};
 use piston::window::WindowSettings;
 use piston::ButtonState;
@@ -14,17 +14,21 @@ use piston::ButtonState;
 mod game;
 use game::Game;
 
+mod coord;
+
 fn main() {
     let opengl = OpenGL::V4_5;
 
     let mut window: GlutinWindow = WindowSettings::new("Snake Game", [800, 600])
         .exit_on_esc(true)
+        .graphics_api(opengl)
         .build()
         .expect("Coudn't open window");
 
     let mut game = Game::new(40, GlGraphics::new(opengl));
 
     let mut event = Events::new(EventSettings::new()).ups(10);
+
     while let Some(e) = event.next(&mut window) {
         if let Some(arg) = e.render_args() {
             game.render(&arg)

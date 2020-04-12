@@ -5,6 +5,8 @@ use piston::Button;
 mod snake;
 use snake::Snake;
 
+use crate::coord::Coord;
+
 pub struct Game {
     gl: GlGraphics,
     snake: Snake,
@@ -16,7 +18,7 @@ impl Game {
 
         Game {
             gl,
-            snake: Snake::new(10.0, 10.0, converted_tile),
+            snake: Snake::new(Coord(10.0, 10.0), converted_tile),
         }
     }
 

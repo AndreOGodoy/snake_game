@@ -5,7 +5,7 @@ use std::collections::LinkedList;
 
 use crate::coord::Coord;
 
-#[derive(PartialEq, Clone)]
+#[derive(PartialEq, Clone, Copy)]
 enum Direction {
     UP,
     DOWN,
@@ -16,7 +16,7 @@ enum Direction {
 
 pub struct Snake {
     pub head_coord: Coord,
-    body: LinkedList<Coord>,
+    pub body: LinkedList<Coord>,
     tile_size: f64,
     direction: Direction,
 }
@@ -34,21 +34,32 @@ impl Snake {
     pub fn render(&self, args: &RenderArgs, gl: &mut GlGraphics) {
         use graphics::*;
 
+        let snake_color = [215.0 / 255.0, 56.0 / 255.0, 94.0 / 255.0, 1.0];
+
         let head = rectangle::square(
             self.tile_size * self.head_coord.0,
             self.tile_size * self.head_coord.1,
             self.tile_size,
         );
 
-        let body: Vec<types::Rectangle> = self.body.iter().map(|coord: &Coord| {
-            graphics::rectangle::square(self.tile_size * coord.0, self.tile_size * coord.1, self.tile_size)
-        }).collect();
+        let body: Vec<types::Rectangle> = self
+            .body
+            .iter()
+            .map(|coord: &Coord| {
+                graphics::rectangle::square(
+                    self.tile_size * coord.0,
+                    self.tile_size * coord.1,
+                    self.tile_size,
+                )
+            })
+            .collect();
 
         gl.draw(args.viewport(), |context, gl| {
-            graphics::rectangle([1.0, 1.0, 1.0, 1.0], head, context.transform, gl);
-            body.iter().for_each(|&body_part| graphics::rectangle([1.0, 1.0, 1.0, 1.0], body_part, context.transform, gl))
+            graphics::rectangle(snake_color, head, context.transform, gl);
+            body.iter().for_each(|&body_part| {
+                graphics::rectangle(snake_color, body_part, context.transform, gl)
+            })
         });
-
     }
 
     pub fn update(&mut self) {
@@ -78,7 +89,7 @@ impl Snake {
     }
 
     pub fn register(&mut self, button: &Button) {
-        let last_direction = self.direction.clone();
+        let last_direction = self.direction;
 
         self.direction = match button {
             Button::Keyboard(Key::Up) if last_direction != Direction::DOWN => Direction::UP,
@@ -87,5 +98,9 @@ impl Snake {
             Button::Keyboard(Key::Left) if last_direction != Direction::RIGHT => Direction::LEFT,
             _ => last_direction,
         };
+    }
+
+    pub fn is_in_body(&self, coord: Coord) -> bool {
+        self.body.iter().any(|body_part| *body_part == coord)
     }
 }

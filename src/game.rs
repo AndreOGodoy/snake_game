@@ -12,22 +12,29 @@ use crate::coord::Coord;
 
 pub struct Game {
     gl: GlGraphics,
-    snake: Snake,
+    pub snake: Snake,
     food: Food,
+    screen_size: (f64, f64),
+    tile_size: f64,
 }
 
 impl Game {
-    pub fn new(gl: GlGraphics, tile_size: f64) -> Self {
+    pub fn new(gl: GlGraphics, tile_size: f64, screen_size: (f64, f64)) -> Self {
+        let (max_x, max_y) = screen_size;
         Game {
             gl,
             snake: Snake::new(Coord(10.0, 10.0), tile_size),
-            food: Food::new(Coord(10.0, 10.0), tile_size),
+            food: Food::new(Coord(max_x / tile_size, max_y / tile_size), tile_size),
+            screen_size,
+            tile_size,
         }
     }
 
     fn render_background(&mut self, args: &RenderArgs) {
+        let background_color = [231.0 / 255.0, 211.0 / 255.0, 159.0 / 255.0, 1.0];
+
         self.gl.draw(args.viewport(), |_context, gl| {
-            graphics::clear([90.0 / 255.0, 177.0 / 255.0, 187.0 / 255.0, 1.0], gl);
+            graphics::clear(background_color, gl);
         });
     }
 
@@ -46,14 +53,22 @@ impl Game {
     }
 
     pub fn update(&mut self) {
-        self.snake.update();
+        self.food.set_max_coord(Coord(
+            self.screen_size.0 / self.tile_size,
+            self.screen_size.1 / self.tile_size,
+        ));
         if self.head_in_food() {
             self.snake.eat();
             self.food.update();
         }
+        self.snake.update();
     }
 
     pub fn register(&mut self, button: &Button) {
         self.snake.register(&button);
+    }
+
+    pub fn set_max_size(&mut self, screen_size: (f64, f64)) {
+        self.screen_size = screen_size;
     }
 }
